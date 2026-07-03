@@ -3,8 +3,8 @@ import sys
 import os
 from logi.logi import logger
 # ====================НАЧАЛО НАСТРОЙКИ ====================
-EXCEL_FILE = "data_base_py/data_base_2026.xlsm"
-SHEET_NAME = "base" # None = первый лист, или укажите имя листа
+EXCEL_FILE = "baze/best.xlsx"
+SHEET_NAME = "title" # None = первый лист, или укажите имя листа
 
 # Колонки (A=1, B=2, ...)
 COL_INVENTORY = 1  # A - Инвентарный номер

@@ -3,16 +3,20 @@
 venv/
 env/
 do/
-do_renamed/
+posle/
 # Файлы баз данных Excel
 data_base_py/
 base/
+baze/
 *.xlsm
 *.xlsx
 *.xls
 data_base_2026.xlsm
 best.xlsx
 all_data.xls
+all_data_best.xlsx
+
+
 # Лог-файлы
 *.log
 logi.log
