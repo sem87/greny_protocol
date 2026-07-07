@@ -5,6 +5,7 @@ from logi.logi import logger
 from datetime import datetime, date
 from input_data import input_rename
 import random
+from geo_coordinate import main_geo_coordinate, format_to_dms
 
 # ====================НАЧАЛО НАСТРОЙКИ ====================
 # BASE_FILE = "baze/best.xlsx"
@@ -188,7 +189,7 @@ if __name__ == "__main__":
     # =======Начало входные данные=====
     itog_number = None
     search_point = "БАЙки"  # Место где стоит вышка
-    location_measure_metrics = "УкАрлино" # Граничный населенный пункт где беруться замеры
+    location_measure_metrics = "шайМУратово"  # Граничный населенный пункт где беруться замеры
     date_protocol = "10.06.2016"
     # =======Конец входные данные======
 
@@ -252,18 +253,36 @@ if __name__ == "__main__":
     svidetelstvo_poverka_date = svidetelstvo_izmerenia[result_key][0]
     svidetelstvo_poverka_number = svidetelstvo_izmerenia[result_key][1]
 
-
-
-
     # Берем граничный населенный пункт и парсим координаты
     itog_location_measure_metrics = location_measure_metrics.strip().capitalize()
+    point_geo_all = main_geo_coordinate(location_measure_metrics=itog_location_measure_metrics)
+    print(point_geo_all)
+    # format_to_dms(lat=point_geo_all[0][0], lon=point_geo_all[0][1])
+    point_geo_1_shirota = format_to_dms(*point_geo_all[0])[0]
+    point_geo_1_dolgota = format_to_dms(*point_geo_all[0])[1]
 
+    point_geo_2_shirota = format_to_dms(*point_geo_all[1])[0]
+    point_geo_2_dolgota = format_to_dms(*point_geo_all[1])[1]
 
+    point_geo_3_shirota = format_to_dms(*point_geo_all[2])[0]
+    point_geo_3_dolgota = format_to_dms(*point_geo_all[2])[1]
 
-
+    point_geo_4_shirota = format_to_dms(*point_geo_all[3])[0]
+    point_geo_4_dolgota = format_to_dms(*point_geo_all[3])[1]
+    point_geo_5_shirota = format_to_dms(*point_geo_all[4])[0]
+    point_geo_5_dolgota = format_to_dms(*point_geo_all[4])[1]
+    point_geo_6_shirota = format_to_dms(*point_geo_all[5])[0]
+    point_geo_6_dolgota = format_to_dms(*point_geo_all[5])[1]
 
     # запись
     input_rename(itog_rayon=itog_rayon, itog_razrecshenie=itog_razrecshenie, date_protocol=date_protocol,
                  itog_number=itog_number, itog_coordinates=itog_coordinates, itog_power=itog_power,
                  itog_height=itog_height, svidetelstvo_poverka_date=svidetelstvo_poverka_date,
-                 svidetelstvo_poverka_number=svidetelstvo_poverka_number,itog_location_measure_metrics=itog_location_measure_metrics)
+                 svidetelstvo_poverka_number=svidetelstvo_poverka_number,
+                 itog_location_measure_metrics=itog_location_measure_metrics, point_geo_1_shirota=point_geo_1_shirota,
+                 point_geo_1_dolgota=point_geo_1_dolgota, point_geo_2_shirota=point_geo_2_shirota,
+                 point_geo_2_dolgota=point_geo_2_dolgota, point_geo_3_shirota=point_geo_3_shirota,
+                 point_geo_3_dolgota=point_geo_3_dolgota, point_geo_4_shirota=point_geo_4_shirota,
+                 point_geo_4_dolgota=point_geo_4_dolgota, point_geo_5_shirota=point_geo_5_shirota,
+                 point_geo_5_dolgota=point_geo_5_dolgota, point_geo_6_shirota=point_geo_6_shirota,
+                 point_geo_6_dolgota=point_geo_6_dolgota)

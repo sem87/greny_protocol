@@ -12,7 +12,10 @@ output_folder = 'posle'
 # =============================================
 
 def input_rename(itog_rayon, itog_razrecshenie, date_protocol, itog_number, itog_coordinates, itog_power, itog_height,
-                 svidetelstvo_poverka_number, svidetelstvo_poverka_date, itog_location_measure_metrics):
+                 svidetelstvo_poverka_number, svidetelstvo_poverka_date, itog_location_measure_metrics,
+                 point_geo_1_shirota, point_geo_1_dolgota, point_geo_2_shirota, point_geo_2_dolgota,
+                 point_geo_3_shirota, point_geo_3_dolgota, point_geo_4_shirota, point_geo_4_dolgota,
+                 point_geo_5_shirota, point_geo_5_dolgota, point_geo_6_shirota, point_geo_6_dolgota):
     # Формируем полный путь для сохранения
     # Имя нового файла
     output_filename = f"отчет_{itog_rayon}_{itog_razrecshenie}.xlsx"
@@ -45,7 +48,19 @@ def input_rename(itog_rayon, itog_razrecshenie, date_protocol, itog_number, itog
     sheet['M35'] = svidetelstvo_poverka_number
     sheet['M36'] = svidetelstvo_poverka_date
     sheet['E53'] = itog_location_measure_metrics
-
+    #=======Широта долгота=======
+    sheet['H53'] = point_geo_1_shirota
+    sheet['I53'] = point_geo_1_dolgota
+    sheet['H54'] = point_geo_2_shirota
+    sheet['I54'] = point_geo_2_dolgota
+    sheet['H55'] = point_geo_3_shirota
+    sheet['I55'] = point_geo_3_dolgota
+    sheet['H56'] = point_geo_4_shirota
+    sheet['I56'] = point_geo_4_dolgota
+    sheet['H57'] = point_geo_5_shirota
+    sheet['I57'] = point_geo_5_dolgota
+    sheet['H58'] = point_geo_6_shirota
+    sheet['I58'] = point_geo_6_dolgota
     # # --- Вариант Б: Вставка массива данных (например, в 4-ю строку) ---
     # new_data = ['Иванов', 'Иван', 'Иванович', 35, 'Менеджер']
     # start_row = 4
