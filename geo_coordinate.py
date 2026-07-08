@@ -239,4 +239,4 @@ def main_geo_coordinate(location_measure_metrics):
 # ==================== ОСНОВНОЙ СКРИПТ ====================
 
 if __name__ == "__main__":
-    main_geo_coordinate(location_measure_metrics = "Шаймуратово")
+    main_geo_coordinate(location_measure_metrics = "большетенькашево")

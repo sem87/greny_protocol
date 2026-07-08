@@ -6,6 +6,7 @@ from datetime import datetime, date
 from input_data import input_rename
 import random
 from geo_coordinate import main_geo_coordinate, format_to_dms
+from raschetni_azimut import main_raschetnii_azimut, simulate_measured_azimuth
 
 # ====================НАЧАЛО НАСТРОЙКИ ====================
 # BASE_FILE = "baze/best.xlsx"
@@ -188,9 +189,9 @@ if __name__ == "__main__":
 
     # =======Начало входные данные=====
     itog_number = None
-    search_point = "БАЙки"  # Место где стоит вышка
-    location_measure_metrics = "шайМУратово"  # Граничный населенный пункт где беруться замеры
-    date_protocol = "10.06.2016"
+    search_point = "Уфа"  # Место где стоит вышка
+    location_measure_metrics = "большетенькашево"  # Граничный населенный пункт где беруться замеры
+    date_protocol = "10.08.2016"
     # =======Конец входные данные======
 
     # 1. Читаем файл
@@ -218,13 +219,25 @@ if __name__ == "__main__":
 
     # координаты
     coordinates_shirota_1 = get_point_value(point_data, "Широта WGS 84 (N)")
+    if coordinates_shirota_1 is None:
+        coordinates_shirota_1 = int(random.randint(10, 50))
     coordinates_shirota_2 = get_point_value(point_data, "Колонка_9")
+    if coordinates_shirota_2 is None:
+        coordinates_shirota_2 = int(random.randint(10, 50))
     coordinates_shirota_3 = get_point_value(point_data, "Колонка_10")
+    if coordinates_shirota_3 is None:
+        coordinates_shirota_3 = int(random.randint(10, 50))
     coordinates_dolgota_1 = get_point_value(point_data, "Долгота WGS 84 (E)")
+    if coordinates_dolgota_1 is None:
+        coordinates_dolgota_1 = int(random.randint(10, 50))
     coordinates_dolgota_2 = get_point_value(point_data, "Колонка_12'")
+    if coordinates_dolgota_2 is None:
+        coordinates_dolgota_2 = int(random.randint(10, 50))
     coordinates_dolgota_3 = get_point_value(point_data, "Колонка_13")
+    if coordinates_dolgota_3 is None:
+        coordinates_dolgota_3 = int(random.randint(10, 50))
     # Правильный формат: 55° 45' 20.88" N, 37° 37' 2.28" E
-    itog_coordinates = f"{coordinates_shirota_1}° {coordinates_shirota_2}' {coordinates_shirota_3}\" N, {coordinates_dolgota_1}° {coordinates_dolgota_2}' {coordinates_dolgota_3}\" E"
+    itog_coordinates = f"{coordinates_shirota_1}°{coordinates_shirota_2}'{coordinates_shirota_3}\"N,{coordinates_dolgota_1}°{coordinates_dolgota_2}'{coordinates_dolgota_3}\"E"
 
     # мощность передатчика
     power = get_point_value(point_data, "Мощность, кВт")
@@ -260,19 +273,65 @@ if __name__ == "__main__":
     # format_to_dms(lat=point_geo_all[0][0], lon=point_geo_all[0][1])
     point_geo_1_shirota = format_to_dms(*point_geo_all[0])[0]
     point_geo_1_dolgota = format_to_dms(*point_geo_all[0])[1]
-
     point_geo_2_shirota = format_to_dms(*point_geo_all[1])[0]
     point_geo_2_dolgota = format_to_dms(*point_geo_all[1])[1]
-
     point_geo_3_shirota = format_to_dms(*point_geo_all[2])[0]
     point_geo_3_dolgota = format_to_dms(*point_geo_all[2])[1]
-
     point_geo_4_shirota = format_to_dms(*point_geo_all[3])[0]
     point_geo_4_dolgota = format_to_dms(*point_geo_all[3])[1]
     point_geo_5_shirota = format_to_dms(*point_geo_all[4])[0]
     point_geo_5_dolgota = format_to_dms(*point_geo_all[4])[1]
     point_geo_6_shirota = format_to_dms(*point_geo_all[5])[0]
     point_geo_6_dolgota = format_to_dms(*point_geo_all[5])[1]
+
+    # Расчетный азимут
+    point_1_two = f"{point_geo_1_shirota},{point_geo_1_dolgota}"
+    azimut_raschetni_1 = main_raschetnii_azimut(p1=itog_coordinates, p2=point_1_two)
+    azimut_izmereni_1 = simulate_measured_azimuth(azimut_raschetni_1, sigma_deg=0.06)
+    point_2_two = f"{point_geo_2_shirota},{point_geo_2_dolgota}"
+    azimut_raschetni_2 = main_raschetnii_azimut(p1=itog_coordinates, p2=point_2_two)
+    azimut_izmereni_2 = simulate_measured_azimuth(azimut_raschetni_2, sigma_deg=0.08)
+    point_3_two = f"{point_geo_3_shirota},{point_geo_3_dolgota}"
+    azimut_raschetni_3 = main_raschetnii_azimut(p1=itog_coordinates, p2=point_3_two)
+    azimut_izmereni_3 = simulate_measured_azimuth(azimut_raschetni_3, sigma_deg=0.09)
+    point_4_two = f"{point_geo_4_shirota},{point_geo_4_dolgota}"
+    azimut_raschetni_4 = main_raschetnii_azimut(p1=itog_coordinates, p2=point_4_two)
+    azimut_izmereni_4 = simulate_measured_azimuth(azimut_raschetni_4, sigma_deg=0.04)
+    point_5_two = f"{point_geo_5_shirota},{point_geo_5_dolgota}"
+    azimut_raschetni_5 = main_raschetnii_azimut(p1=itog_coordinates, p2=point_5_two)
+    azimut_izmereni_5 = simulate_measured_azimuth(azimut_raschetni_5, sigma_deg=0.08)
+    point_6_two = f"{point_geo_6_shirota},{point_geo_6_dolgota}"
+    azimut_raschetni_6 = main_raschetnii_azimut(p1=itog_coordinates, p2=point_6_two)
+    azimut_izmereni_6 = simulate_measured_azimuth(azimut_raschetni_6, sigma_deg=0.07)
+
+    # E норм и расч
+    chenel_number = int(get_point_value(point_data, "ТВК"))
+    # data_chenel_number = {20: [466, 50.7], 21: [474, 50.8], 22: [482, 51.0], 23: [490, 51.1], 24: [498, 51.3],
+    #                       25: [506, 51.4, "27DD"], 26: [514, 51.5, "27DE"], 27: [522, 51.7], 28: [530, 51.8],
+    #                       29: [538, 51.9],
+    #                       30: [546, 52.1], 31: [554, 52.2], 32: [562, 52.3], 33: [570, 52.4, "27"], 34: [578, 52.6],
+    #                       35: [586, 52.7], 36: [594, 52.8], 37: [602, 52.9], 38: [610, 53.0], 39: [618, 53.1],
+    #                       40: [626, 53.3], 41: [634, 53.4], 42: [642, 53.5], 43: [650, 53.6], 44: [658, 53.7],
+    #                       45: [666, 53.8], 46: [674, 53.9, "27DA"], 47: [682, 54.0], 48: [690, 54.1], 49: [698, 54.2],
+    #                       50: [706, 54.3], 51: [714, 54.4], 52: [722, 54.5], 53: [730, 54.6], 54: [738, 54.7],
+    #                       55: [746, 54.8], 56: [754, 54.9], 57: [762, 55.0], 58: [770, 55.1], 59: [778, 55.1]}
+
+    data_chenel_number = {20: [466, 50.7, "EEEE"], 21: [474, 50.8, "EEEE"], 22: [482, 51.0, "EEEE"],
+                          23: [490, 51.1, "27DB"], 24: [498, 51.3, "EEEE"], 25: [506, 51.4, "27DD"],
+                          26: [514, 51.5, "27DE"], 27: [522, 51.7, "EEEE"], 28: [530, 51.8, "EEEE"],
+                          29: [538, 51.9, "EEEE"], 30: [546, 52.1, "27E3"], 31: [554, 52.2, "27E5"],
+                          32: [562, 52.3, "27DF"], 33: [570, 52.4, "27D9"], 34: [578, 52.6, "EEEE"],
+                          35: [586, 52.7, "4EEC"], 36: [594, 52.8, "EEEE"], 37: [602, 52.9, "4EF0"],
+                          38: [610, 53.0, "27E4"], 39: [618, 53.1, "EEEE"], 40: [626, 53.3, "EEEE"],
+                          41: [634, 53.4, "27E1"], 42: [642, 53.5, "EEEE"], 43: [650, 53.6, "4EED"],
+                          44: [658, 53.7, "4EEA"], 45: [666, 53.8, "27DC"], 46: [674, 53.9, "27DA"],
+                          47: [682, 54.0, "EEEE"], 48: [690, 54.1, "EEEE"], 49: [698, 54.2, "EEEE"],
+                          50: [706, 54.3, "EEEE"], 51: [714, 54.4, "EEEE"], 52: [722, 54.5, "EEEE"],
+                          53: [730, 54.6, "EEEE"], 54: [738, 54.7, "EEEE"], 55: [746, 54.8, "EEEE"],
+                          56: [754, 54.9, "4EE9"], 57: [762, 55.0, "4EF1"], 58: [770, 55.1, "4EEF"],
+                          59: [778, 55.1, "EEEE"]}
+    gauss_value = data_chenel_number[chenel_number][1]
+    cell_id = data_chenel_number[chenel_number][2]
 
     # запись
     input_rename(itog_rayon=itog_rayon, itog_razrecshenie=itog_razrecshenie, date_protocol=date_protocol,
@@ -285,4 +344,10 @@ if __name__ == "__main__":
                  point_geo_3_dolgota=point_geo_3_dolgota, point_geo_4_shirota=point_geo_4_shirota,
                  point_geo_4_dolgota=point_geo_4_dolgota, point_geo_5_shirota=point_geo_5_shirota,
                  point_geo_5_dolgota=point_geo_5_dolgota, point_geo_6_shirota=point_geo_6_shirota,
-                 point_geo_6_dolgota=point_geo_6_dolgota)
+                 point_geo_6_dolgota=point_geo_6_dolgota, azimut_raschetni_1=azimut_raschetni_1,
+                 azimut_raschetni_2=azimut_raschetni_2, azimut_raschetni_3=azimut_raschetni_3,
+                 azimut_raschetni_4=azimut_raschetni_4, azimut_raschetni_5=azimut_raschetni_5,
+                 azimut_raschetni_6=azimut_raschetni_6, azimut_izmereni_1=azimut_izmereni_1,
+                 azimut_izmereni_2=azimut_izmereni_2, azimut_izmereni_3=azimut_izmereni_3,
+                 azimut_izmereni_4=azimut_izmereni_4, azimut_izmereni_5=azimut_izmereni_5,
+                 azimut_izmereni_6=azimut_izmereni_6, gauss_value=gauss_value,cell_id=cell_id)
