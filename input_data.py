@@ -1,6 +1,9 @@
 import openpyxl
 import os
 import random
+import shutil
+import subprocess
+import tempfile
 # ================= НАСТРОЙКИ =================
 # Путь к исходному файлу (должен существовать)
 input_file = 'baze/best.xlsx'
@@ -18,10 +21,11 @@ def input_rename(itog_rayon, itog_razrecshenie, date_protocol, itog_number, itog
                  point_geo_5_shirota, point_geo_5_dolgota, point_geo_6_shirota, point_geo_6_dolgota, azimut_raschetni_1,
                  azimut_raschetni_2, azimut_raschetni_3, azimut_raschetni_4, azimut_raschetni_5, azimut_raschetni_6,
                  azimut_izmereni_1, azimut_izmereni_2, azimut_izmereni_3, azimut_izmereni_4, azimut_izmereni_5,
-                 azimut_izmereni_6,gauss_value,cell_id,itog_koeff_ysilenia,itog_type_anten,itog_prozent_ohvata_naselenia):
+                 azimut_izmereni_6, gauss_value, cell_id, itog_koeff_ysilenia, itog_type_anten,
+                 itog_prozent_ohvata_naselenia):
     # Формируем полный путь для сохранения
     # Имя нового файла
-    output_filename = f"отчет_{itog_rayon}_{itog_razrecshenie}.xlsx"
+    output_filename = f"Протокол_зоны_НЦТВ_{itog_rayon}_{itog_location_measure_metrics}_{date_protocol}.xlsx"
     output_path = os.path.join(output_folder, output_filename)
 
     # 1. Создаем папку для сохранения, если она еще не существует
@@ -79,7 +83,7 @@ def input_rename(itog_rayon, itog_razrecshenie, date_protocol, itog_number, itog
     sheet['M57'] = azimut_izmereni_5
     sheet['M58'] = azimut_izmereni_6
     sheet['O53'] = gauss_value
-    sheet['N53'] = gauss_value+random.randint(20, 40) / 10.0
+    sheet['N53'] = gauss_value + random.randint(20, 40) / 10.0
     sheet['O54'] = gauss_value
     sheet['N54'] = gauss_value + random.randint(20, 45) / 10.0
     sheet['O55'] = gauss_value
@@ -102,16 +106,57 @@ def input_rename(itog_rayon, itog_razrecshenie, date_protocol, itog_number, itog
     sheet['T56'] = itog_prozent_ohvata_naselenia
     sheet['T57'] = itog_prozent_ohvata_naselenia
     sheet['T58'] = itog_prozent_ohvata_naselenia
-    # # --- Вариант Б: Вставка массива данных (например, в 4-ю строку) ---
-    # new_data = ['Иванов', 'Иван', 'Иванович', 35, 'Менеджер']
-    # start_row = 4
-    # for col_index, value in enumerate(new_data, start=1): # start=1 означает колонку A
-    #     sheet.cell(row=start_row, column=col_index, value=value)
 
     # 4. Сохраняем файл по новому пути
     workbook.save(output_path)
     print(f"✅ Файл успешно сохранен по пути:\n{output_path}")
 
 
+def convert_xlsx_to_pdf(folder_name):
+    """Конвертирует все файлы .xlsx в .pdf в указанной папке
+    с помощью LibreOffice в headless режиме."""
+    # Проверяем, существует ли папка
+    if not os.path.isdir(folder_name):
+        print(f"Ошибка: Папка '{folder_name}' не найдена.")
+        return
+    # Получаем абсолютный путь (LibreOffice лучше работает с абсолютными путями)
+    abs_folder_path = os.path.abspath(folder_name)
+    # # Счетчик для статистики
+    # converted_count = 0
+
+    # Проходим по всем файлам в папке
+    for filename in os.listdir(abs_folder_path):
+        # Проверяем, что файл имеет расширение .xlsx
+        if filename.lower().endswith('.xlsx'):
+            input_file_path = os.path.join(abs_folder_path, filename)
+            # Формируем команду для вызова LibreOffice
+            command = [
+                'libreoffice',
+                '--headless',  # Запуск без графического интерфейса
+                '--norestore',  # Не восстанавливать предыдущую сессию
+                '--convert-to', 'pdf',  # Формат конвертации
+                '--outdir', abs_folder_path,  # Папка для сохранения (та же самая)
+                input_file_path  # Путь к исходному файлу
+            ]
+            #
+            # print(f"Конвертирую: {filename} ...", end=" ")
+            try:
+                # Запускаем процесс.
+                # stdout и stderr перенаправляем в DEVNULL, чтобы не засорять консоль
+                subprocess.run(
+                    command,
+                    check=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL
+                )
+                print(f"Готово! (Сохранено как {filename.replace('.xlsx', '.pdf')})")
+            except subprocess.CalledProcessError:
+                print("Ошибка при конвертации.")
+            except FileNotFoundError:
+                print("\nКритическая ошибка: LibreOffice не найден в системе!")
+                print("Установите его: sudo apt install libreoffice-calc")
+                break
+
+
 if __name__ == "__main__":
-    pass
+    convert_xlsx_to_pdf(folder_name=output_folder)

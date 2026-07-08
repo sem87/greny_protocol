@@ -3,7 +3,7 @@ import sys
 import os
 from logi.logi import logger
 from datetime import datetime, date
-from input_data import input_rename
+from input_data import input_rename,convert_xlsx_to_pdf
 import random
 from geo_coordinate import main_geo_coordinate, format_to_dms
 from raschetni_azimut import main_raschetnii_azimut, simulate_measured_azimuth
@@ -18,6 +18,7 @@ POINT_COLUMN = 4  # Колонка E (индекс 4, считая с 0) - "Пу
 HEADER_ROW = 3  # Строка с основными заголовками (строка 4 в Excel, индекс 3)
 DATA_START_ROW = 6  # Строка начала данных (строка 7 в Excel, индекс 6)
 
+output_folder = 'posle'
 
 # ====================КОНЕЦ НАСТРОЙКИ ====================
 # ============НАЧАЛО ПОЛУЧЕНИЯ ДАННЫХ ИЗ all_data_best.xlsx ======
@@ -137,17 +138,12 @@ def get_point_value(point_data, column_name):
 
 # ============КОНЕЦ ПОЛУЧЕНИЯ ДАННЫХ ИЗ all_data_best.xlsx ======
 if __name__ == "__main__":
-    # # =========ОТЛАДКА
-    # headers, data = read_all_data_with_debug(BASE_FILE, BASE_SHEET_NAME, debug_row=26)
-    # # =========ОТЛАДКА
-
     # =======Начало входные данные=====
     itog_number = None
     search_point = "Уфа"  # Место где стоит вышка
     location_measure_metrics = "большетенькашево"  # Граничный населенный пункт где беруться замеры
     date_protocol = "10.08.2016"
     # =======Конец входные данные======
-
     # 1. Читаем файл
     headers, data = read_all_data(BASE_FILE, BASE_SHEET_NAME)
     # 3. Ищем конкретный пункт
@@ -248,35 +244,26 @@ if __name__ == "__main__":
 
     # Расчетный азимут
     point_1_two = f"{point_geo_1_shirota},{point_geo_1_dolgota}"
-    azimut_raschetni_1 = main_raschetnii_azimut(p1=itog_coordinates, p2=point_1_two)
-    azimut_izmereni_1 = simulate_measured_azimuth(azimut_raschetni_1, sigma_deg=0.06)
+    azimut_raschetni_1 = round(main_raschetnii_azimut(p1=itog_coordinates, p2=point_1_two),1)
+    azimut_izmereni_1 = round(simulate_measured_azimuth(azimut_raschetni_1, sigma_deg=0.06),1)
     point_2_two = f"{point_geo_2_shirota},{point_geo_2_dolgota}"
-    azimut_raschetni_2 = main_raschetnii_azimut(p1=itog_coordinates, p2=point_2_two)
-    azimut_izmereni_2 = simulate_measured_azimuth(azimut_raschetni_2, sigma_deg=0.08)
+    azimut_raschetni_2 = round(main_raschetnii_azimut(p1=itog_coordinates, p2=point_2_two),1)
+    azimut_izmereni_2 = round(simulate_measured_azimuth(azimut_raschetni_2, sigma_deg=0.08),1)
     point_3_two = f"{point_geo_3_shirota},{point_geo_3_dolgota}"
-    azimut_raschetni_3 = main_raschetnii_azimut(p1=itog_coordinates, p2=point_3_two)
-    azimut_izmereni_3 = simulate_measured_azimuth(azimut_raschetni_3, sigma_deg=0.09)
+    azimut_raschetni_3 = round(main_raschetnii_azimut(p1=itog_coordinates, p2=point_3_two),1)
+    azimut_izmereni_3 = round(simulate_measured_azimuth(azimut_raschetni_3, sigma_deg=0.09),1)
     point_4_two = f"{point_geo_4_shirota},{point_geo_4_dolgota}"
-    azimut_raschetni_4 = main_raschetnii_azimut(p1=itog_coordinates, p2=point_4_two)
-    azimut_izmereni_4 = simulate_measured_azimuth(azimut_raschetni_4, sigma_deg=0.04)
+    azimut_raschetni_4 = round(main_raschetnii_azimut(p1=itog_coordinates, p2=point_4_two),1)
+    azimut_izmereni_4 = round(simulate_measured_azimuth(azimut_raschetni_4, sigma_deg=0.04),1)
     point_5_two = f"{point_geo_5_shirota},{point_geo_5_dolgota}"
-    azimut_raschetni_5 = main_raschetnii_azimut(p1=itog_coordinates, p2=point_5_two)
-    azimut_izmereni_5 = simulate_measured_azimuth(azimut_raschetni_5, sigma_deg=0.08)
+    azimut_raschetni_5 = round(main_raschetnii_azimut(p1=itog_coordinates, p2=point_5_two),1)
+    azimut_izmereni_5 = round(simulate_measured_azimuth(azimut_raschetni_5, sigma_deg=0.08),1)
     point_6_two = f"{point_geo_6_shirota},{point_geo_6_dolgota}"
-    azimut_raschetni_6 = main_raschetnii_azimut(p1=itog_coordinates, p2=point_6_two)
-    azimut_izmereni_6 = simulate_measured_azimuth(azimut_raschetni_6, sigma_deg=0.07)
+    azimut_raschetni_6 = round(main_raschetnii_azimut(p1=itog_coordinates, p2=point_6_two),1)
+    azimut_izmereni_6 = round(simulate_measured_azimuth(azimut_raschetni_6, sigma_deg=0.07),1)
 
     # E норм и расч
     chenel_number = int(get_point_value(point_data, "ТВК"))
-    # data_chenel_number = {20: [466, 50.7], 21: [474, 50.8], 22: [482, 51.0], 23: [490, 51.1], 24: [498, 51.3],
-    #                       25: [506, 51.4, "27DD"], 26: [514, 51.5, "27DE"], 27: [522, 51.7], 28: [530, 51.8],
-    #                       29: [538, 51.9],
-    #                       30: [546, 52.1], 31: [554, 52.2], 32: [562, 52.3], 33: [570, 52.4, "27"], 34: [578, 52.6],
-    #                       35: [586, 52.7], 36: [594, 52.8], 37: [602, 52.9], 38: [610, 53.0], 39: [618, 53.1],
-    #                       40: [626, 53.3], 41: [634, 53.4], 42: [642, 53.5], 43: [650, 53.6], 44: [658, 53.7],
-    #                       45: [666, 53.8], 46: [674, 53.9, "27DA"], 47: [682, 54.0], 48: [690, 54.1], 49: [698, 54.2],
-    #                       50: [706, 54.3], 51: [714, 54.4], 52: [722, 54.5], 53: [730, 54.6], 54: [738, 54.7],
-    #                       55: [746, 54.8], 56: [754, 54.9], 57: [762, 55.0], 58: [770, 55.1], 59: [778, 55.1]}
 
     data_chenel_number = {20: [466, 50.7, "EEEE"], 21: [474, 50.8, "EEEE"], 22: [482, 51.0, "EEEE"],
                           23: [490, 51.1, "27DB"], 24: [498, 51.3, "EEEE"], 25: [506, 51.4, "27DD"],
@@ -319,3 +306,4 @@ if __name__ == "__main__":
                  azimut_izmereni_6=azimut_izmereni_6, gauss_value=gauss_value, cell_id=cell_id,
                  itog_koeff_ysilenia=itog_koeff_ysilenia, itog_type_anten=itog_type_anten,
                  itog_prozent_ohvata_naselenia=itog_prozent_ohvata_naselenia)
+    convert_xlsx_to_pdf(folder_name=output_folder)
