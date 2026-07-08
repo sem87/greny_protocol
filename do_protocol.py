@@ -82,52 +82,6 @@ def read_all_data(file_path, sheet_name=None):
         return None, None
 
 
-# ====================НАЧАЛО ОТЛАДОЧНЫЙ КОД====================???????????????
-# def debug_cell_info(file_path, sheet_name=None, target_row=7):
-#     """Отладочная функция для проверки содержимого ячеек"""
-#     if not os.path.exists(file_path):
-#         logger.error(f"Файл не найден: {file_path}")
-#         return
-#
-#     wb = openpyxl.load_workbook(file_path, read_only=True)
-#     if sheet_name is None:
-#         sheet = wb.active
-#     else:
-#         sheet = wb[sheet_name]
-#
-#     print(f"\n{'=' * 80}")
-#     print(f"ОТЛАДКА: Строка {target_row} (индекс {target_row - 1})")
-#     print(f"{'=' * 80}")
-#
-#     # Получаем строку
-#     row = list(sheet.iter_rows(min_row=target_row, max_row=target_row, values_only=False))[0]
-#
-#     for cell in row:
-#         value = cell.value
-#         col_idx = cell.column - 1  # 0-based индекс
-#
-#         # Показываем только непустые ячейки или ячейки с датами
-#         if value is not None or 'дата' in str(cell.value).lower():
-#             print(f"Колонка {col_idx} ({cell.coordinate}):")
-#             print(f"  Значение: {repr(value)}")
-#             print(f"  Тип: {type(value).__name__}")
-#             print(f"  Числовой формат: {cell.number_format}")
-#             print()
-#
-#     wb.close()
-#
-#
-# def read_all_data_with_debug(file_path, sheet_name=None, debug_row=7):
-#     """Читает файл с отладкой"""
-#     # Сначала запускаем отладку
-#     debug_cell_info(file_path, sheet_name, debug_row)
-#
-#     # Затем читаем данные как обычно
-#     return read_all_data(file_path, sheet_name)
-
-# ====================КОНЕЦ ОТЛАДОЧНЫЙ КОД====================????????????????
-
-
 def find_point_by_name(headers, data, point_name, point_column=POINT_COLUMN):
     """Ищет строку по названию пункта установки.
     Args:
@@ -213,7 +167,7 @@ if __name__ == "__main__":
 
     # номер разрешения
     razrecshenie = get_point_value(point_data, "Разрешение на использование радиочастот")
-    razrecshenie_data_vidachi = get_point_value(point_data, "Дата выдачи")
+    razrecshenie_data_vidachi = get_point_value(point_data, "Дата выдачим")
     itog_razrecshenie = f"Разрешение " + razrecshenie + " от " + str(razrecshenie_data_vidachi)
     logger.info(f"Разрешение: {itog_razrecshenie}")
 
@@ -241,11 +195,19 @@ if __name__ == "__main__":
 
     # мощность передатчика
     power = get_point_value(point_data, "Мощность, кВт")
-    itog_power = f"{power}, кВт"
+    itog_power = f"{power} кВт"
 
     # высота подвеса
     height = get_point_value(point_data, "Высота подвеса над уровнем земли (из ЧТП)")
-    itog_height = f"{height}, м"
+    itog_height = f"{height} м"
+
+    # тип антены
+    type_anten = get_point_value(point_data, "Тип антенны")
+    itog_type_anten = f"{type_anten}"
+
+    # коэффициент усиления
+    koeff_ysilenia = get_point_value(point_data, "Ку , дБд")
+    itog_koeff_ysilenia = f"{koeff_ysilenia} дБ"
 
     # средство измерений
     svidetelstvo_izmerenia = {"16.02.2027": ["17.02.2026", "С-БЕВ/17-02-2026/506326766"],
@@ -333,6 +295,10 @@ if __name__ == "__main__":
     gauss_value = data_chenel_number[chenel_number][1]
     cell_id = data_chenel_number[chenel_number][2]
 
+    # процент охвата населения
+    prozent_ohvata_naselenia = round(get_point_value(point_data, "% охвата населения"),1)
+    itog_prozent_ohvata_naselenia = f"{prozent_ohvata_naselenia}"
+
     # запись
     input_rename(itog_rayon=itog_rayon, itog_razrecshenie=itog_razrecshenie, date_protocol=date_protocol,
                  itog_number=itog_number, itog_coordinates=itog_coordinates, itog_power=itog_power,
@@ -350,4 +316,6 @@ if __name__ == "__main__":
                  azimut_raschetni_6=azimut_raschetni_6, azimut_izmereni_1=azimut_izmereni_1,
                  azimut_izmereni_2=azimut_izmereni_2, azimut_izmereni_3=azimut_izmereni_3,
                  azimut_izmereni_4=azimut_izmereni_4, azimut_izmereni_5=azimut_izmereni_5,
-                 azimut_izmereni_6=azimut_izmereni_6, gauss_value=gauss_value,cell_id=cell_id)
+                 azimut_izmereni_6=azimut_izmereni_6, gauss_value=gauss_value, cell_id=cell_id,
+                 itog_koeff_ysilenia=itog_koeff_ysilenia, itog_type_anten=itog_type_anten,
+                 itog_prozent_ohvata_naselenia=itog_prozent_ohvata_naselenia)

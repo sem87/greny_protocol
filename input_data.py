@@ -18,7 +18,7 @@ def input_rename(itog_rayon, itog_razrecshenie, date_protocol, itog_number, itog
                  point_geo_5_shirota, point_geo_5_dolgota, point_geo_6_shirota, point_geo_6_dolgota, azimut_raschetni_1,
                  azimut_raschetni_2, azimut_raschetni_3, azimut_raschetni_4, azimut_raschetni_5, azimut_raschetni_6,
                  azimut_izmereni_1, azimut_izmereni_2, azimut_izmereni_3, azimut_izmereni_4, azimut_izmereni_5,
-                 azimut_izmereni_6,gauss_value,cell_id):
+                 azimut_izmereni_6,gauss_value,cell_id,itog_koeff_ysilenia,itog_type_anten,itog_prozent_ohvata_naselenia):
     # Формируем полный путь для сохранения
     # Имя нового файла
     output_filename = f"отчет_{itog_rayon}_{itog_razrecshenie}.xlsx"
@@ -42,12 +42,14 @@ def input_rename(itog_rayon, itog_razrecshenie, date_protocol, itog_number, itog
     # --- Вариант А: Вставка в конкретные ячейки по координатам ---
     sheet['N7'] = itog_number
     sheet['G5'] = date_protocol
-    sheet['R7'] = date_protocol
+    sheet['P7'] = date_protocol
     sheet['N12'] = itog_rayon
     sheet['E17'] = itog_razrecshenie
-    sheet['Q21'] = itog_coordinates
-    sheet['Q22'] = itog_power
-    sheet['Q23'] = itog_height
+    sheet['M21'] = itog_coordinates
+    sheet['M22'] = itog_power
+    sheet['M23'] = itog_height
+    sheet['M24'] = itog_type_anten
+    sheet['M25'] = itog_koeff_ysilenia
     sheet['M35'] = svidetelstvo_poverka_number
     sheet['M36'] = svidetelstvo_poverka_date
     sheet['E53'] = itog_location_measure_metrics
@@ -94,6 +96,12 @@ def input_rename(itog_rayon, itog_razrecshenie, date_protocol, itog_number, itog
     sheet['K56'] = cell_id
     sheet['K57'] = cell_id
     sheet['K58'] = cell_id
+    sheet['T53'] = itog_prozent_ohvata_naselenia
+    sheet['T54'] = itog_prozent_ohvata_naselenia
+    sheet['T55'] = itog_prozent_ohvata_naselenia
+    sheet['T56'] = itog_prozent_ohvata_naselenia
+    sheet['T57'] = itog_prozent_ohvata_naselenia
+    sheet['T58'] = itog_prozent_ohvata_naselenia
     # # --- Вариант Б: Вставка массива данных (например, в 4-ю строку) ---
     # new_data = ['Иванов', 'Иван', 'Иванович', 35, 'Менеджер']
     # start_row = 4
