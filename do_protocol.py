@@ -169,24 +169,24 @@ def main_itog_do_protocol(search_point, location_measure_metrics, date_protocol)
     logger.info(f"Разрешение: {itog_razrecshenie}")
 
     # координаты
-    coordinates_shirota_1 = get_point_value(point_data, "Широта WGS 84 (N)")
-    if coordinates_shirota_1 is None:
-        coordinates_shirota_1 = int(random.randint(10, 50))
-    coordinates_shirota_2 = get_point_value(point_data, "Колонка_9")
-    if coordinates_shirota_2 is None:
-        coordinates_shirota_2 = int(random.randint(10, 50))
-    coordinates_shirota_3 = get_point_value(point_data, "Колонка_10")
-    if coordinates_shirota_3 is None:
-        coordinates_shirota_3 = int(random.randint(10, 50))
-    coordinates_dolgota_1 = get_point_value(point_data, "Долгота WGS 84 (E)")
-    if coordinates_dolgota_1 is None:
-        coordinates_dolgota_1 = int(random.randint(10, 50))
-    coordinates_dolgota_2 = get_point_value(point_data, "Колонка_12'")
-    if coordinates_dolgota_2 is None:
-        coordinates_dolgota_2 = int(random.randint(10, 50))
-    coordinates_dolgota_3 = get_point_value(point_data, "Колонка_13")
-    if coordinates_dolgota_3 is None:
-        coordinates_dolgota_3 = int(random.randint(10, 50))
+    coordinates_shirota_1 = get_point_value(point_data, "Широта градусы")
+    # if coordinates_shirota_1 is None:
+    #     coordinates_shirota_1 = int(random.randint(10, 50))
+    coordinates_shirota_2 = get_point_value(point_data, "Широта минуты")
+    # if coordinates_shirota_2 is None:
+    #     coordinates_shirota_2 = int(random.randint(10, 50))
+    coordinates_shirota_3 = get_point_value(point_data, "Широта секунды")
+    # if coordinates_shirota_3 is None:
+    #     coordinates_shirota_3 = int(random.randint(10, 50))
+    coordinates_dolgota_1 = get_point_value(point_data, "Долгота градусы")
+    # if coordinates_dolgota_1 is None:
+    #     coordinates_dolgota_1 = int(random.randint(10, 50))
+    coordinates_dolgota_2 = get_point_value(point_data, "Долгота минуты")
+    # if coordinates_dolgota_2 is None:
+    #     coordinates_dolgota_2 = int(random.randint(10, 50))
+    coordinates_dolgota_3 = get_point_value(point_data, "Долгота секунды")
+    # if coordinates_dolgota_3 is None:
+    #     coordinates_dolgota_3 = int(random.randint(10, 50))
     # Правильный формат: 55° 45' 20.88" N, 37° 37' 2.28" E
     itog_coordinates = f"{coordinates_shirota_1}°{coordinates_shirota_2}'{coordinates_shirota_3}\"N,{coordinates_dolgota_1}°{coordinates_dolgota_2}'{coordinates_dolgota_3}\"E"
 
@@ -284,7 +284,7 @@ def main_itog_do_protocol(search_point, location_measure_metrics, date_protocol)
     cell_id = data_chenel_number[chenel_number][2]
 
     # процент охвата населения
-    prozent_ohvata_naselenia = round(get_point_value(point_data, "% охвата населения"), 1)
+    prozent_ohvata_naselenia = round(get_point_value(point_data, "% охвата населения"), 2)
     itog_prozent_ohvata_naselenia = f"{prozent_ohvata_naselenia}"
 
     # запись
@@ -312,10 +312,10 @@ def main_itog_do_protocol(search_point, location_measure_metrics, date_protocol)
 
 # ============КОНЕЦ ПОЛУЧЕНИЯ ДАННЫХ ИЗ all_data_best.xlsx ======
 if __name__ == "__main__":
-    all_sp = [["Уфа", "Большетенькашево", "11.11.2016"], ["Уфа", "Прибельский", "11.09.2016"],
-              ["Уфа", "Шаймуратово", "11.04.2016"], ["Уфа", "Сайраново", "11.11.2016"],
-              ["Уфа", "Арсланово", "22.03.2016"], ["Уфа", "Калтаево", "11.11.2016"], ["Уфа", "Ошмянка", "11.05.2016"],
-              ["Уфа", "Преображенское", "11.07.2016"], ["Уфа", "Ольгинское", "28.02.2016"]]
+    all_sp = [["ТОЛБАЗЫ_АУРГ", "ибраево", "11.04.2016"],["ТОЛБАЗЫ_АУРГ", "сабанчи", "11.04.2016"]]
+              # ["ТОЛБАЗЫ", "Шаймуратово", "11.04.2016"], ["УРАЗОВО", "Сайраново", "11.11.2016"],["Уфа", "Большетенькашево", "11.11.2016"], ["Уфа", "Прибельский", "11.09.2016"],, ["УРАЗОВО", "базаргулово", "11.11.2016"]
+              # ["Уфа", "Арсланово", "22.03.2016"], ["Уфа", "Калтаево", "11.11.2016"], ["Уфа", "Ошмянка", "11.05.2016"],
+              # ["Уфа", "Преображенское", "11.07.2016"], ["Уфа", "Ольгинское", "28.02.2016"]
     for object in all_sp:
         try:
             search_point = object[0]
@@ -323,6 +323,7 @@ if __name__ == "__main__":
             date_protocol = object[2]
             main_itog_do_protocol(search_point=search_point, location_measure_metrics=location_measure_metrics,
                                   date_protocol=date_protocol)
-        except:
-            print(f"Не удалось сделать {object}")
+        except Exception as e:
+            logger.error(f"Ошибка чтения файла: {e}")
+            print(f"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&   Не удалось сделать {object}&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
     convert_xlsx_to_pdf(folder_name=output_folder)
