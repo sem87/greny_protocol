@@ -45,7 +45,7 @@ def input_rename(itog_rayon, itog_razrecshenie, date_protocol, itog_number, itog
     # 3. Вставляем данные
     # --- Вариант А: Вставка в конкретные ячейки по координатам ---
     sheet['N7'] = itog_number
-    sheet['G5'] = date_protocol
+    # sheet['G5'] = date_protocol
     sheet['P7'] = date_protocol
     sheet['N12'] = itog_rayon
     sheet['E17'] = itog_razrecshenie
@@ -106,6 +106,7 @@ def input_rename(itog_rayon, itog_razrecshenie, date_protocol, itog_number, itog
     sheet['T56'] = itog_prozent_ohvata_naselenia
     sheet['T57'] = itog_prozent_ohvata_naselenia
     sheet['T58'] = itog_prozent_ohvata_naselenia
+    # sheet['J78'] = output_filename
 
     # 4. Сохраняем файл по новому пути
     workbook.save(output_path)
