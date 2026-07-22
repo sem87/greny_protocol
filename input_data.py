@@ -83,13 +83,13 @@ def input_rename(itog_rayon, itog_razrecshenie, date_protocol, itog_number, itog
     sheet['M57'] = azimut_izmereni_5
     sheet['M58'] = azimut_izmereni_6
     sheet['O53'] = gauss_value
-    sheet['N53'] = round(naprazonnost_mediannaya_itog + random.randint(-10, 15) / 10.0,1)
+    sheet['N53'] = round(naprazonnost_mediannaya_itog + random.randint(10, 15) / 10.0,1)
     sheet['O54'] = gauss_value
     sheet['N54'] = round(naprazonnost_mediannaya_itog + random.randint(-10, 15) / 10.0,1)
     sheet['O55'] = gauss_value
-    sheet['N55'] = round(naprazonnost_mediannaya_itog + random.randint(-10, 4) / 10.0,1)
+    sheet['N55'] = round(naprazonnost_mediannaya_itog + random.randint(-10, -1) / 10.0,1)
     sheet['O56'] = gauss_value
-    sheet['N56'] = round(naprazonnost_mediannaya_itog + random.randint(-10, 15) / 10.0,1)
+    sheet['N56'] = round(naprazonnost_mediannaya_itog + random.randint(1, 15) / 10.0,1)
     sheet['O57'] = gauss_value
     sheet['N57'] = round(naprazonnost_mediannaya_itog + random.randint(-10, 15) / 10.0,1)
     sheet['O58'] = gauss_value
