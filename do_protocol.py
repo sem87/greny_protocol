@@ -7,6 +7,10 @@ from input_data import input_rename, convert_xlsx_to_pdf
 import random
 from geo_coordinate import main_geo_coordinate, format_to_dms
 from raschetni_azimut import main_raschetnii_azimut, simulate_measured_azimuth
+from datetime import datetime, timedelta
+import holidays
+
+ru_holidays = holidays.Russia()
 
 # ====================НАЧАЛО НАСТРОЙКИ ====================
 # BASE_FILE = "baze/best.xlsx"
@@ -137,7 +141,21 @@ def get_point_value(point_data, column_name):
     return None
 
 
-def main_itog_do_protocol(search_point, location_measure_metrics, date_protocol):
+def get_next_workday(date_str: str) -> str:
+    """
+    Принимает дату в формате 'DD.MM.YYYY'.
+    Возвращает дату следующего рабочего дня в том же формате.
+    """
+    date_obj = datetime.strptime(date_str, "%d.%m.%Y").date()
+
+    while date_obj.weekday() >= 5 or date_obj in ru_holidays:
+        date_obj += timedelta(days=1)
+
+    return date_obj.strftime("%d.%m.%Y")
+
+
+def main_itog_do_protocol(search_point, location_measure_metrics, date_protocol, naprazonnost_mediannaya_niz,
+                          naprazonnost_mediannaya_verch):
     """ИТОГОВАЯ ФУНКЦИЯ"""
     # =======Начало входные данные=====
     itog_number = None
@@ -282,6 +300,10 @@ def main_itog_do_protocol(search_point, location_measure_metrics, date_protocol)
                           59: [778, 55.1, "EEEE"]}
     gauss_value = data_chenel_number[chenel_number][1]
     cell_id = data_chenel_number[chenel_number][2]
+    naprazonnost_mediannaya_itog = round(random.randint(int(round(naprazonnost_mediannaya_niz, 2) * 100),
+                                                        int(round(naprazonnost_mediannaya_verch, 2) * 100)) / 100, 2)
+    if naprazonnost_mediannaya_itog <= gauss_value:
+        naprazonnost_mediannaya_itog = gauss_value + 0.51  # 4. Точка вместо запятой!
 
     # процент охвата населения
     prozent_ohvata_naselenia = round(get_point_value(point_data, "% охвата населения"), 2)
@@ -306,24 +328,43 @@ def main_itog_do_protocol(search_point, location_measure_metrics, date_protocol)
                  azimut_izmereni_4=azimut_izmereni_4, azimut_izmereni_5=azimut_izmereni_5,
                  azimut_izmereni_6=azimut_izmereni_6, gauss_value=gauss_value, cell_id=cell_id,
                  itog_koeff_ysilenia=itog_koeff_ysilenia, itog_type_anten=itog_type_anten,
-                 itog_prozent_ohvata_naselenia=itog_prozent_ohvata_naselenia)
-
+                 itog_prozent_ohvata_naselenia=itog_prozent_ohvata_naselenia,
+                 naprazonnost_mediannaya_itog=naprazonnost_mediannaya_itog)
 
 
 # ============КОНЕЦ ПОЛУЧЕНИЯ ДАННЫХ ИЗ all_data_best.xlsx ======
 if __name__ == "__main__":
-    all_sp = [["ТОЛБАЗЫ_АУРГ", "ибраево", "11.04.2016"],["ТОЛБАЗЫ_АУРГ", "сабанчи", "11.04.2016"]]
-              # ["ТОЛБАЗЫ", "Шаймуратово", "11.04.2016"], ["УРАЗОВО", "Сайраново", "11.11.2016"],["Уфа", "Большетенькашево", "11.11.2016"], ["Уфа", "Прибельский", "11.09.2016"],, ["УРАЗОВО", "базаргулово", "11.11.2016"]
-              # ["Уфа", "Арсланово", "22.03.2016"], ["Уфа", "Калтаево", "11.11.2016"], ["Уфа", "Ошмянка", "11.05.2016"],
-              # ["Уфа", "Преображенское", "11.07.2016"], ["Уфа", "Ольгинское", "28.02.2016"]
+    all_sp = [["Уфа", "Байгильдино", "01.05.2016", 53.56, 58.56],
+              ["Уфа", "Балтика", "02.06.2016", 58.32, 65.64],
+              ["Уфа", "Охлебинино", "03.07.2016", 53.31, 55.85],
+              ["Уфа", "Арсланово", "14.04.2016", 57.76, 57.80],
+              ["Уфа", "Арово", "15.04.2016", 63.28, 63.50],
+              ["Уфа", "Шарипово", "16.04.2016", 61.05, 61.11],
+              ["Уфа", "Николаевка", "17.05.2016", 61.63, 62.49],
+              ["Уфа", "Дмитриевка", "18.04.2016", 54.29, 54.46]]
+    failed_objects = []
     for object in all_sp:
         try:
             search_point = object[0]
             location_measure_metrics = object[1]
-            date_protocol = object[2]
+            # date_protocol = object[2]
+            date_protocol = get_next_workday(object[2])
+            naprazonnost_mediannaya_niz = object[3]
+            naprazonnost_mediannaya_verch = object[4]
             main_itog_do_protocol(search_point=search_point, location_measure_metrics=location_measure_metrics,
-                                  date_protocol=date_protocol)
+                                  date_protocol=date_protocol, naprazonnost_mediannaya_niz=naprazonnost_mediannaya_niz,
+                                  naprazonnost_mediannaya_verch=naprazonnost_mediannaya_verch)
         except Exception as e:
             logger.error(f"Ошибка чтения файла: {e}")
             print(f"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&   Не удалось сделать {object}&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+            # Сохраняем объект и текст ошибки
+            failed_objects.append({"object": object, "error": str(e)})
     convert_xlsx_to_pdf(folder_name=output_folder)
+
+    # Вывод красивого отчёта
+    if failed_objects:
+        print(f"\n❌ Итого не обработано: {len(failed_objects)}")
+        for item in failed_objects:
+            print(f"  • {item['object']} — {item['error']}")
+    else:
+        print("\n✅ Все объекты успешно обработаны!")

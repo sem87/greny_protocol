@@ -22,7 +22,7 @@ def input_rename(itog_rayon, itog_razrecshenie, date_protocol, itog_number, itog
                  azimut_raschetni_2, azimut_raschetni_3, azimut_raschetni_4, azimut_raschetni_5, azimut_raschetni_6,
                  azimut_izmereni_1, azimut_izmereni_2, azimut_izmereni_3, azimut_izmereni_4, azimut_izmereni_5,
                  azimut_izmereni_6, gauss_value, cell_id, itog_koeff_ysilenia, itog_type_anten,
-                 itog_prozent_ohvata_naselenia):
+                 itog_prozent_ohvata_naselenia,naprazonnost_mediannaya_itog):
     # Формируем полный путь для сохранения
     # Имя нового файла
     output_filename = f"Протокол_зоны_НЦТВ_{itog_rayon}_{itog_location_measure_metrics}_{date_protocol}.xlsx"
@@ -83,17 +83,17 @@ def input_rename(itog_rayon, itog_razrecshenie, date_protocol, itog_number, itog
     sheet['M57'] = azimut_izmereni_5
     sheet['M58'] = azimut_izmereni_6
     sheet['O53'] = gauss_value
-    sheet['N53'] = gauss_value + random.randint(20, 40) / 10.0
+    sheet['N53'] = round(naprazonnost_mediannaya_itog + random.randint(2, 4) / 10.0,1)
     sheet['O54'] = gauss_value
-    sheet['N54'] = gauss_value + random.randint(20, 45) / 10.0
+    sheet['N54'] = round(naprazonnost_mediannaya_itog + random.randint(1, 4) / 10.0,1)
     sheet['O55'] = gauss_value
-    sheet['N55'] = gauss_value + random.randint(30, 40) / 10.0
+    sheet['N55'] = round(naprazonnost_mediannaya_itog + random.randint(1, 4) / 10.0,1)
     sheet['O56'] = gauss_value
-    sheet['N56'] = gauss_value + random.randint(20, 30) / 10.0
+    sheet['N56'] = round(naprazonnost_mediannaya_itog + random.randint(1, 4) / 10.0,1)
     sheet['O57'] = gauss_value
-    sheet['N57'] = gauss_value + random.randint(20, 45) / 10.0
+    sheet['N57'] = round(naprazonnost_mediannaya_itog + random.randint(1, 4) / 10.0,1)
     sheet['O58'] = gauss_value
-    sheet['N58'] = gauss_value + random.randint(20, 40) / 10.0
+    sheet['N58'] = round(naprazonnost_mediannaya_itog + random.randint(1, 3) / 10.0,1)
     sheet['K53'] = cell_id
     sheet['K54'] = cell_id
     sheet['K55'] = cell_id
