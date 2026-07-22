@@ -302,8 +302,8 @@ def main_itog_do_protocol(search_point, location_measure_metrics, date_protocol,
     cell_id = data_chenel_number[chenel_number][2]
     naprazonnost_mediannaya_itog = round(random.randint(int(round(naprazonnost_mediannaya_niz, 2) * 100),
                                                         int(round(naprazonnost_mediannaya_verch, 2) * 100)) / 100, 2)
-    if naprazonnost_mediannaya_itog <= gauss_value:
-        naprazonnost_mediannaya_itog = gauss_value + 0.51  # 4. Точка вместо запятой!
+    if naprazonnost_mediannaya_itog <= gauss_value+1:
+        naprazonnost_mediannaya_itog = gauss_value + 1.01
 
     # процент охвата населения
     prozent_ohvata_naselenia = round(get_point_value(point_data, "% охвата населения"), 2)
